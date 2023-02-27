@@ -25,7 +25,13 @@ struct ContentView: View {
         let amountPerPerson = grandTotal / peoplecount
     return amountPerPerson
         }
-    
+    var totalAmount: Double {
+        let peoplecount = Double(numberOfPeople + 2)
+        let tipselection = Double(tipPercentage)
+        let tipValue = checkAmount/100 * tipselection
+        let grandTotal = checkAmount + tipValue
+    return grandTotal
+    }
     
     var body: some View {
         NavigationView {
@@ -38,21 +44,44 @@ struct ContentView: View {
                     Picker("Number of People", selection: $numberOfPeople) {
                         ForEach(2..<100) {
                             Text("\($0) people")
-                            
+               
+
                         }
                     }
                 }
+//MARK:------------------------------------------------------------------------
+               
+                
                 Section {
                     Picker("Pick Tip Percentage", selection: $tipPercentage) { ForEach(tipPercentages, id: \.self) {
                         Text($0, format: .percent)
-                        }
+                    }
                     }
                     .pickerStyle(.segmented)
+                    
+                } header: { Text("Choose a tip percentage") }
+//MARK:------------------------------------------------------------------------
+                Section {
+                    Text(totalAmount, format: .currency(code: Locale.current.currency?.identifier ?? "CZK" ))
+                              
+                } header: {
+                    Text("Total amount with tip")
                 }
                 Section {
                     Text(totalPerPerson, format: .currency(code: Locale.current.currency?.identifier ?? "CZK"))
-                }
+                        .padding(20)
 
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .background(.green)
+                        .cornerRadius(10)
+
+                }
+                
+                header: {
+                 Text("Amount per person")
+                }
+                
+//MARK:------------------------------------------------------------------------
             }
             .navigationTitle("WeSplit")
             .toolbar {
